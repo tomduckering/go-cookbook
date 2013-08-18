@@ -1,4 +1,3 @@
-include_recipe 'apt'
 include_recipe 'java'
 
 go_server               = node[:go][:agent][:server_host]
@@ -7,10 +6,7 @@ package_checksum        = node[:go][:agent][:package_checksum]
 go_server_autoregister  = node[:go][:agent][:auto_register]
 autoregister_key        = node[:go][:agent][:auto_register_key]
 
-apt_repository "thoughtworks" do
-  uri "http://download01.thoughtworks.com/go/debian"
-  components ["contrib/"]
-end
+include_recipe 'go::repos'
 
 package "go-agent" do
   version node[:go][:version]

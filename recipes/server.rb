@@ -1,12 +1,8 @@
-include_recipe 'apt'
 include_recipe 'java'
 
 package 'unzip'
 
-apt_repository "thoughtworks" do
-  uri "http://download01.thoughtworks.com/go/debian"
-  components ["contrib/"]
-end
+include_recipe 'go::repos'
 
 package "go-server" do
   version node[:go][:version]
