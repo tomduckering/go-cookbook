@@ -6,16 +6,31 @@ package_checksum        = node[:go][:agent][:package_checksum]
 go_server_autoregister  = node[:go][:agent][:auto_register]
 autoregister_key        = node[:go][:agent][:auto_register_key]
 
-include_recipe 'go::repos'
+if node[:go][:install_method] == 'package'
+  include_recipe 'go::repos'
+elsif node[:go][:install_method] == 'file'
+  remote_file "#{Chef::Config[:file_cache_path]}/#{node[:go][:agent][:package_name]}" do
+    source node[:go][:agent][:package_url]
+    mode 0644
+  end
+else
+  Chef::log.fatal("Unknown install method specified #{node[:go][:install_method]} - only package or file")
+end
 
 package "go-agent" do
-  version node[:go][:version]
-  options "--force-yes"
+  if node[:go][:install_method] == 'package'
+    version node[:go][:version]
+    options "--force-yes"
+  end
+  notifies :start, 'service[go-agent]', :immediately
+  if node[:go][:install_method] == 'file'
+    source "#{Chef::Config[:file_cache_path]}/#{node[:go][:agent][:package_name]}"
+  end
 end
   
 if Chef::Config[:solo] || node.attribute.go?(:server)
   Chef::Log.warn("Chef-solo invocation detected.  node[:go][:server] attribute will be used for server instance configuration.")
-  Chef::Log.info("Using #{node[:go][:server]} for server instance configuration, as specified in node[:go][:server].")
+  Chef::Log.info("Using #{node[:go][:server][:host]} for server instance configuration, as specified in node[:go][:server][:host].")
 else
   go_servers = search(:node, "chef_environment:#{node.chef_environment} AND recipes:go-server")
   go_server = "#{go_servers[0][:ipaddress]}"
