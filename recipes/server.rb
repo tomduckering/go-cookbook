@@ -2,6 +2,8 @@ include_recipe 'java'
 
 package 'unzip'
 
+package 'git'
+
 if node[:go][:install_method] == 'package'
   include_recipe 'go::repos'
 elsif node[:go][:install_method] == 'file'
