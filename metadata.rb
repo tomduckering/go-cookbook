@@ -11,5 +11,5 @@ recipe "go::default", "Installs and configures a Go server and agent on the same
 
 depends "apt", "1.9.2"
 depends "yum", "2.3.0"
-depends "java", "1.10.0"
+depends "java", "1.12.0"
 
