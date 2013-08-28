@@ -2,8 +2,6 @@ include_recipe 'java'
 
 package 'unzip'
 
-package 'git'
-
 include_recipe 'go::repos'
 
 package "go-server" do
