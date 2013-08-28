@@ -6,26 +6,12 @@ package_checksum        = node[:go][:agent][:package_checksum]
 go_server_autoregister  = node[:go][:agent][:auto_register]
 autoregister_key        = node[:go][:agent][:auto_register_key]
 
-if node[:go][:install_method] == 'package'
-  include_recipe 'go::repos'
-elsif node[:go][:install_method] == 'file'
-  remote_file "#{Chef::Config[:file_cache_path]}/#{node[:go][:agent][:package_name]}" do
-    source node[:go][:agent][:package_url]
-    mode 0644
-  end
-else
-  Chef::log.fatal("Unknown install method specified #{node[:go][:install_method]} - only package or file")
-end
+include_recipe 'go::repos'
 
 package "go-agent" do
-  if node[:go][:install_method] == 'package'
-    version node[:go][:version]
-    options "--force-yes"
-  end
+  version node[:go][:version]
+  options "--force-yes" if platform_family?("debian")
   notifies :start, 'service[go-agent]', :immediately
-  if node[:go][:install_method] == 'file'
-    source "#{Chef::Config[:file_cache_path]}/#{node[:go][:agent][:package_name]}"
-  end
 end
   
 if Chef::Config[:solo] || node.attribute.go?(:server)

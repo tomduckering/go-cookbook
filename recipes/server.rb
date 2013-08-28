@@ -4,30 +4,12 @@ package 'unzip'
 
 package 'git'
 
-if node[:go][:install_method] == 'package'
-  include_recipe 'go::repos'
-elsif node[:go][:install_method] == 'file'
-
-  Chef::Log.info(node[:go])
-  
-  remote_file "#{Chef::Config[:file_cache_path]}/#{node[:go][:server][:package_name]}" do
-    source node[:go][:server][:package_url]
-    mode 0644
-  end
-
-else
-  Chef::log.fatal("Unknown install method specified #{node[:go][:install_method]} - only package or file")
-end
+include_recipe 'go::repos'
 
 package "go-server" do
-  if node[:go][:install_method] == 'package'
-    version node[:go][:version]
-    options "--force-yes" #TODO this is only apt I believe
-  end
+  version node[:go][:version]
+  options "--force-yes" if platform_family?("debian")
   notifies :start, 'service[go-server]', :immediately
-  if node[:go][:install_method] == 'file'
-    source "#{Chef::Config[:file_cache_path]}/#{node[:go][:server][:package_name]}"
-  end
 end
 
 # If we're upgrading an existing Go Server then leave the configuration and such intact. 
