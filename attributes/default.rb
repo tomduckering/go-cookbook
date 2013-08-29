@@ -16,3 +16,5 @@ default['go']['server']['package_url']          = "http://download01.thoughtwork
 
 default['go']['agent']['package_name']          = "go-agent-#{go[:version]}.noarch.rpm"
 default['go']['agent']['package_url']           = "http://download01.thoughtworks.com/go/yum/no-arch/#{go[:agent][:package_name]}"
+
+node[:go][:ommit_repos] = false
