@@ -2,7 +2,9 @@ include_recipe 'java'
 
 package 'unzip'
 
-include_recipe 'go::repos' unless node[:go][:omit_repos]
+if ! node[:go][:omit_repos]
+  include_recipe 'go::repos'
+end
 
 package "go-server" do
   version node[:go][:version]

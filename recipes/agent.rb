@@ -6,7 +6,9 @@ package_checksum        = node[:go][:agent][:package_checksum]
 go_server_autoregister  = node[:go][:agent][:auto_register]
 autoregister_key        = node[:go][:agent][:auto_register_key]
 
-include_recipe 'go::repos' unless node[:go][:omit_repos]
+if ! node[:go][:omit_repos]
+  include_recipe 'go::repos'
+end
 
 package "go-agent" do
   version node[:go][:version]
