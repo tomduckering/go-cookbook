@@ -1,4 +1,4 @@
-include_recipe 'java'
+include_recipe 'java' unless node[:go][:omit_java]
 
 go_server               = node[:go][:agent][:server_host]
 package_url             = node[:go][:agent][:package_url]
