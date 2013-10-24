@@ -1,4 +1,4 @@
-include_recipe 'java'
+include_recipe 'java' unless node[:go][:omit_java]
 
 package 'unzip'
 

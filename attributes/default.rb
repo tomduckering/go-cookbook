@@ -18,3 +18,4 @@ default['go']['agent']['package_name']          = "go-agent-#{go[:version]}.noar
 default['go']['agent']['package_url']           = "http://download01.thoughtworks.com/go/yum/no-arch/#{go[:agent][:package_name]}"
 
 default[:go][:omit_repos] = false
+default[:go][:omit_java] = false
